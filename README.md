@@ -55,14 +55,7 @@ This logs battery % to Supabase every 3 minutes and appends output to a log file
 
 ### 1. Create battery_logs Table
 
-Use the contents of battery_log.sql to initialize your table. It should look like:
-```
-create table battery_logs (
-  id uuid default uuid_generate_v4() primary key,
-  percentage int not null,
-  timestamp timestamptz default now()
-);
-```
+Use the contents of [battery_log.sql](https://github.com/adi-kat/Battery-Logger-Supabase/blob/721299778af45ab06520cc7c8a5cd52ab6554302/battery_log.sql) to initialize your table.
 
 ### 2. Periodic Cleanup Job
 
