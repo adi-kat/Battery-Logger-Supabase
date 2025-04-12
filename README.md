@@ -71,7 +71,7 @@ Use Supabase's Integrations to add this cron SQL job:
 delete from battery_logs
 where timestamp < now() - interval '1 day';
 ```
-    This keeps your logs fresh and storage light.
+This keeps your logs fresh and storage light.
 
 ## 📱 iOS Widget (via Scriptable)
 ### 1. Install [Scriptable](https://scriptable.app/)
