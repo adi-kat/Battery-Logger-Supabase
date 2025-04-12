@@ -1,6 +1,12 @@
 # Battery-Logger-Supabase
 Logs your device’s battery percentage to Supabase and displays the latest status using an iOS widget via Scriptable.
 
+![IMG_2081](https://github.com/user-attachments/assets/57a12ac4-a203-45e8-abe9-043c08873640)
+![IMG_2086](https://github.com/user-attachments/assets/baf74265-482a-4f40-b193-a5c08846577b)
+<div align="center">
+  (example percentage alert)
+</div>
+
 ## Overview
 
 This repo helps you:
