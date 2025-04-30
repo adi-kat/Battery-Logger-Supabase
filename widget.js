@@ -40,9 +40,29 @@ function sendNotification(message) {
   notification.schedule();
 }
 
+function getNotifiedFlags() {
+  const fm = FileManager.iCloud();
+  const dir = fm.documentsDirectory();
+  const path = fm.joinPath(dir, "battery_notifications.json");
+  
+  if (fm.fileExists(path)) {
+    const content = fm.readString(path);
+    return JSON.parse(content);
+  } else {
+    return { notified10: false, notified20: false, notified100: false };
+  }
+}
+
+function saveNotifiedFlags(flags) {
+  const fm = FileManager.iCloud();
+  const dir = fm.documentsDirectory();
+  const path = fm.joinPath(dir, "battery_notifications.json");
+  fm.writeString(path, JSON.stringify(flags));
+}
+
 async function createWidget() {
   const { batteryPercent, timestamp } = await fetchBatteryData();
-  
+  const flags = getNotifiedFlags();
   const widget = new ListWidget();
   widget.backgroundColor = new Color('#1F1F1F'); 
 
@@ -52,17 +72,34 @@ async function createWidget() {
 
   if (batteryPercent <= 10) {
     batteryText.textColor = new Color('#FF0000'); 
-    sendNotification("Battery is below 10%! Please charge soon.");
+    if (!flags.notified10) {
+      sendNotification("Battery is below 10%! Please charge soon.");
+      flags.notified10 = true; }
   } else if (batteryPercent <= 20) {
     batteryText.textColor = new Color('#FFFF00');
-    sendNotification("Battery is below 20%. Consider charging soon.");
+    if (!flags.notified20) {
+      sendNotification("Battery is below 20%. Consider charging soon.");
+      flags.notified10 = true; }
   } else if (batteryPercent === 100) {
     batteryText.textColor = new Color('#00FF00'); 
-    sendNotification("Battery is fully charged!");
+    if (!flags.notified100) {
+      sendNotification("Battery is fully charged!");
+      flags.notified100 = true; }
   } else {
     batteryText.textColor = new Color('#00FF00');
   }
 
+  if (batteryPercent > 10 && flags.notified10) {
+    flags.notified10 = false;
+  }
+  if (batteryPercent > 20 && flags.notified20) {
+    flags.notified20 = false;
+  }
+  if (batteryPercent < 100 && flags.notified100) {
+    flags.notified100 = false;
+  }
+  saveNotifiedFlags(flags);
+  
   const timeText = widget.addText(`Last updated: ${timestamp}`);
   timeText.centerAlignText();
   timeText.font = Font.systemFont(12);
